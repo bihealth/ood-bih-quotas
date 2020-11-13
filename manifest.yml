@@ -1,2 +1,5 @@
-name: Passenger App Processes
-description: Display your running Passenger app proceseses in a table
+name: Quotas
+description: Display file system quotas
+icon: fa://hdd-o
+category: Files
+subcategory: Utilities

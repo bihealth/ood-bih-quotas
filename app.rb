@@ -1,4 +1,7 @@
+require 'date'
 require 'erubi'
+require 'filesize'
+require 'si'
 require './command'
 
 set :erb, :escape_html => true
@@ -18,14 +21,23 @@ helpers do
   end
 
   def title
-    "Passenger App Processes"
+    "File System Quotas"
+  end
+
+  def fsize(x, unit="B")
+      Filesize.from("%d %s" % [x, unit]).pretty
+  end
+
+  def sisize(x)
+      x.si
   end
 end
 
 # Define a route at the root '/' of the app.
 get '/' do
   @command = Command.new
-  @processes, @error = @command.exec
+  @quotas, @error = @command.exec
+  @timestamp = DateTime.strptime(@quotas['timestamp'].to_s, '%s').strftime("%Y-%m-%d %H:%M")
 
   # Render the view
   erb :index

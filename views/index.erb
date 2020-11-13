@@ -1,39 +1,49 @@
 <h1><%= title %></h1>
 
-Output generated: <%= Time.now %>
+<p>
+Time: <%= @timestamp %>.
+<span class="text-muted">Quotas are updated approx. every 5 minutes.</span>
+</p>
 
-<pre>
-$ <%= @command %>
-</pre>
+<p class="small">
+If you go above your soft quota, you have a grace
+period in which you can still write data to your volume.
+Once the grace period has passed, no more data can be written to the volume.
+If you use more data than the hard quota then this restriction will apply immediately.
+</p>
 
-<table class="table table-bordered">
-  <tr>
-    <th>USER</th>
-    <th>PID</th>
-    <th>%CPU</th>
-    <th>%MEM</th>
-    <th>VSZ</th>
-    <th>RSS</th>
-    <th>TTY</th>
-    <th>STAT</th>
-    <th>START</th>
-    <th>TIME</th>
-    <th>COMMAND</th>
-  </tr>
-  <% @processes.each do |app| %>
-  <tr>
-    <td><%= app.user %></td>
-    <td><%= app.pid %></td>
-    <td><%= app.pct_cpu %></td>
-    <td><%= app.pct_mem %></td>
-    <td><%= app.vsz %></td>
-    <td><%= app.rss %></td>
-    <td><%= app.tty %></td>
-    <td><%= app.stat %></td>
-    <td><%= app.start %></td>
-    <td><%= app.time %></td>
-    <td><%= app.command %></td>
-  </tr>
-  <% end %>
-
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>path</th>
+      <th>block usage</th>
+      <th>block soft limit</th>
+      <th>block hard limit</th>
+      <th>block grace</th>
+      <th>files usage</th>
+      <th>files soft limit</th>
+      <th>files hard limit</th>
+      <th>files grace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @quotas["quotas"].each do |rec| %>
+    <tr
+      <% if (rec.fetch("total_block_usage", 0) >= rec.fetch("block_limit", 0) or rec.fetch("total_file_usage", 0) >= rec.fetch("file_limit", 0)) %>=
+         class="danger"
+      <% elsif (rec.fetch("total_block_usage", 0) >= rec.fetch("block_soft_limit", 0) or rec.fetch("total_file_usage", 0) >= rec.fetch("file_soft_limit", 0)) %>=
+         class="warning"
+      <% end %>>
+      <td class="text-left"><%= rec.fetch("path", "-") %></td>
+      <td class="text-right"><%= fsize(rec.fetch("total_block_usage", 0)) %></td>
+      <td class="text-right"><%= fsize(rec.fetch("block_soft_limit", 0)) %></td>
+      <td class="text-right"><%= fsize(rec.fetch("block_limit", 0)) %></td>
+      <td class="text-right"><%= rec.fetch("block_grace", "-") %></td>
+      <td class="text-right"><%= sisize(rec.fetch("total_file_usage", 0)) %></td>
+      <td class="text-right"><%= sisize(rec.fetch("file_soft_limit", 0)) %></td>
+      <td class="text-right"><%= sisize(rec.fetch("file_limit", 0)) %></td>
+      <td class="text-right"><%= rec.fetch("file_grace", "-") %></td>
+    </tr>
+    <% end %>
+  </tbody>
 </table>
