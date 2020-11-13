@@ -29,9 +29,9 @@ If you use more data than the hard quota then this restriction will apply immedi
   <tbody>
     <% @quotas["quotas"].each do |rec| %>
     <tr
-      <% if (rec.fetch("total_block_usage", 0) >= rec.fetch("block_limit", 0) or rec.fetch("total_file_usage", 0) >= rec.fetch("file_limit", 0)) %>=
+      <% if (rec.fetch("total_block_usage", 0) >= rec.fetch("block_limit", 0) or rec.fetch("total_file_usage", 0) >= rec.fetch("file_limit", 0)) %>
          class="danger"
-      <% elsif (rec.fetch("total_block_usage", 0) >= rec.fetch("block_soft_limit", 0) or rec.fetch("total_file_usage", 0) >= rec.fetch("file_soft_limit", 0)) %>=
+      <% elsif (rec.fetch("total_block_usage", 0) >= rec.fetch("block_soft_limit", 0) or rec.fetch("total_file_usage", 0) >= rec.fetch("file_soft_limit", 0)) %>
          class="warning"
       <% end %>>
       <td class="text-left"><%= rec.fetch("path", "-") %></td>
