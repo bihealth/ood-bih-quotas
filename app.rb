@@ -25,7 +25,7 @@ helpers do
   end
 
   def fsize(x, unit="B")
-      Filesize.from("%d %s" % [x, unit]).pretty
+      Filesize.from("%d %s" % [x.abs, unit]).pretty
   end
 
   def sisize(x)
